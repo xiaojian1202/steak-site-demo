@@ -1,4 +1,14 @@
 ---
+import '@fontsource/caveat/500.css'
+import '@fontsource/caveat/600.css'
+import '@fontsource/caveat/700.css'
+import '@fontsource/space-grotesk/500.css'
+import '@fontsource/space-grotesk/600.css'
+import '@fontsource/space-grotesk/700.css'
+import '@fontsource/ibm-plex-sans/400.css'
+import '@fontsource/ibm-plex-sans/600.css'
+import '@fontsource/ibm-plex-mono/400.css'
+import '@fontsource/ibm-plex-mono/600.css'
 import '../styles/global.css'
 import {theme} from '../theme'
 
@@ -17,6 +27,7 @@ const {title, description} = Astro.props
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    <meta name="color-scheme" content="light dark" />
     <style define:vars={{
       colorBackground: theme.colors.background,
       colorSurface: theme.colors.surface,
@@ -25,9 +36,15 @@ const {title, description} = Astro.props
       colorPrimary: theme.colors.primary,
       colorPrimaryContrast: theme.colors.primaryContrast,
       colorAccent: theme.colors.accent,
+      colorAccentContrast: theme.colors.accentContrast,
+      colorAccentSoft: theme.colors.accentSoft,
       colorBorder: theme.colors.border,
+      colorStatusOpen: theme.colors.statusOpen,
+      colorStatusClosed: theme.colors.statusClosed,
+      fontDisplay: theme.fonts.display,
       fontHeading: theme.fonts.heading,
       fontBody: theme.fonts.body,
+      fontMono: theme.fonts.mono,
       radiusSm: theme.radius.sm,
       radiusMd: theme.radius.md,
       radiusLg: theme.radius.lg,
@@ -45,9 +62,15 @@ const {title, description} = Astro.props
         --color-primary: var(--colorPrimary);
         --color-primary-contrast: var(--colorPrimaryContrast);
         --color-accent: var(--colorAccent);
+        --color-accent-contrast: var(--colorAccentContrast);
+        --color-accent-soft: var(--colorAccentSoft);
         --color-border: var(--colorBorder);
+        --color-status-open: var(--colorStatusOpen);
+        --color-status-closed: var(--colorStatusClosed);
+        --font-display: var(--fontDisplay);
         --font-heading: var(--fontHeading);
         --font-body: var(--fontBody);
+        --font-mono: var(--fontMono);
         --radius-sm: var(--radiusSm);
         --radius-md: var(--radiusMd);
         --radius-lg: var(--radiusLg);
@@ -58,8 +81,64 @@ const {title, description} = Astro.props
         --spacing-xl: var(--spacingXl);
       }
     </style>
+    <style define:vars={{
+      darkColorBackground: theme.darkColors.background,
+      darkColorSurface: theme.darkColors.surface,
+      darkColorText: theme.darkColors.text,
+      darkColorTextMuted: theme.darkColors.textMuted,
+      darkColorPrimary: theme.darkColors.primary,
+      darkColorPrimaryContrast: theme.darkColors.primaryContrast,
+      darkColorAccent: theme.darkColors.accent,
+      darkColorAccentContrast: theme.darkColors.accentContrast,
+      darkColorAccentSoft: theme.darkColors.accentSoft,
+      darkColorBorder: theme.darkColors.border,
+      darkColorStatusOpen: theme.darkColors.statusOpen,
+      darkColorStatusClosed: theme.darkColors.statusClosed,
+    }}>
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --color-background: var(--darkColorBackground);
+          --color-surface: var(--darkColorSurface);
+          --color-text: var(--darkColorText);
+          --color-text-muted: var(--darkColorTextMuted);
+          --color-primary: var(--darkColorPrimary);
+          --color-primary-contrast: var(--darkColorPrimaryContrast);
+          --color-accent: var(--darkColorAccent);
+          --color-accent-contrast: var(--darkColorAccentContrast);
+          --color-accent-soft: var(--darkColorAccentSoft);
+          --color-border: var(--darkColorBorder);
+          --color-status-open: var(--darkColorStatusOpen);
+          --color-status-closed: var(--darkColorStatusClosed);
+        }
+      }
+    </style>
   </head>
   <body>
-    <slot />
+    <svg class="sr-only-defs" aria-hidden="true" focusable="false">
+      <defs>
+        <!-- Sketch-paper grain: a faint fibrous texture behind every section. -->
+        <filter id="paper-grain" x="-5%" y="-5%" width="110%" height="110%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="noise" />
+          <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.02 0" />
+        </filter>
+        <!-- Hand-wobble: displaces straight edges so ink lines read as drawn, not vector-perfect. -->
+        <filter id="ink-wobble" x="-8%" y="-8%" width="116%" height="116%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="3" result="wobble" />
+          <feDisplacementMap in="SourceGraphic" in2="wobble" scale="3.2" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+        <filter id="ink-wobble-lg" x="-8%" y="-8%" width="116%" height="116%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="11" result="wobble" />
+          <feDisplacementMap in="SourceGraphic" in2="wobble" scale="6" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </defs>
+    </svg>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="paper-ground" aria-hidden="true"></div>
+    <main id="main">
+      <slot />
+    </main>
+    <script>
+      import '../scripts/motion'
+    </script>
   </body>
 </html>

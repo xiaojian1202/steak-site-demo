@@ -1,6 +1,11 @@
 ---
 import {getOpenStatus} from '../lib/hours'
 
+interface MenuCategory {
+  _id: string
+  title: string
+}
+
 interface Props {
   shopName: string
   tagline?: string
@@ -8,66 +13,298 @@ interface Props {
   mapsUrl?: string
   orderingLinks?: {label: string; url: string}[]
   hours?: {dayOfWeek: number; closed?: boolean; open?: string; close?: string}[]
+  categories?: MenuCategory[]
 }
 
-const {shopName, tagline, address, mapsUrl, orderingLinks, hours} = Astro.props
+const {shopName, tagline, address, mapsUrl, orderingLinks, hours, categories} = Astro.props
 const {isOpen} = getOpenStatus(hours)
 const addressLine = [address?.street, address?.city].filter(Boolean).join(', ')
 ---
 
-<section class="hero container">
-  <h1>{shopName}</h1>
-  {tagline && <p class="tagline">{tagline}</p>}
-  <p class="status">
-    <span class={`dot ${isOpen ? 'dot--open' : 'dot--closed'}`}></span>
-    {isOpen ? 'Open now' : 'Closed'}
-    {addressLine && ` · ${addressLine}`}
-  </p>
-  <div class="actions">
-    {mapsUrl && (
-      <a class="button button--secondary" href={mapsUrl} target="_blank" rel="noopener">
-        Directions
-      </a>
-    )}
-    {orderingLinks?.map((link) => (
-      <a class="button" href={link.url} target="_blank" rel="noopener">
-        {link.label}
-      </a>
-    ))}
+<section class="hero">
+  {categories && categories.length > 0 && (
+    <nav class="hero-nav" aria-label="Menu categories">
+      <div class="hero-nav-row">
+        {categories.map((category) => (
+          <a class="hero-nav-link" href={`#${category._id}`} data-hero-nav-link>
+            <span class="hero-nav-link-text">{category.title}</span>
+            <svg class="hero-nav-link-underline" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M2 6c8-5 14 5 22 0s14-5 22 0 14 5 22 0 14-5 20 0" filter="url(#ink-wobble)" />
+            </svg>
+          </a>
+        ))}
+      </div>
+    </nav>
+  )}
+  <div class="hero-copy">
+    <div class="name-block">
+      <h1>{shopName}</h1>
+      <svg class="underline" viewBox="0 0 320 18" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M4 10 C 100 4, 220 14, 316 9" filter="url(#ink-wobble-lg)" />
+      </svg>
+    </div>
+    {tagline && <p class="tagline">{tagline}</p>}
+  </div>
+
+  <div class="hero-art" data-hero-art>
+    <svg class="scene" viewBox="0 0 520 320" aria-hidden="true">
+      <!-- Background layer: steam, drifts slower on scroll. -->
+      <g data-parallax="0.25">
+        <g class="steam" fill="none" stroke="var(--color-text-muted)" stroke-width="2.5" stroke-linecap="round" filter="url(#ink-wobble)">
+          <path class="draw" d="M262 156c-9-10 5-16-3-27c-8-11 4-18-3-29" />
+          <path class="draw" d="M278 160c-8-9 5-15-2-26c-7-11 4-17-2-27" />
+        </g>
+      </g>
+
+      <!-- Foreground layer: cat mid-whisk, matcha bowl, a small bird. -->
+      <g data-parallax="0.7">
+        <!-- Doodle ring sits behind the bowl so the bowl reads as resting inside it. -->
+        <ellipse class="doodle-ring draw" cx="218" cy="138" rx="52" ry="36" fill="none" stroke="var(--color-accent-soft)" stroke-width="3.5" filter="url(#ink-wobble-lg)" />
+        <g transform="translate(138 8)" filter="url(#ink-wobble)" fill="var(--color-surface)" stroke="var(--color-border)" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">
+          <path class="draw" d="M56 46 42 12 74 34Z" />
+          <path class="draw" d="M104 46 118 12 86 34Z" />
+          <circle class="draw" cx="80" cy="64" r="34" />
+          <path class="draw" d="M52 84c-4 20-2 30 2 36h52c4-6 6-16 2-36" />
+        </g>
+        <g transform="translate(138 8)" fill="none" stroke="var(--color-border)" stroke-linecap="round">
+          <circle cx="68" cy="60" r="2.6" fill="var(--color-border)" stroke="none" />
+          <circle cx="92" cy="60" r="2.6" fill="var(--color-border)" stroke="none" />
+          <path class="draw" d="M76 70c2 2 6 2 8 0" stroke-width="3.5" filter="url(#ink-wobble)" />
+          <path class="draw" d="M50 62 30 58M50 68 28 68M50 74 30 80" stroke-width="2.5" filter="url(#ink-wobble)" />
+          <path class="draw" d="M110 62 130 58M110 68 132 68M110 74 130 80" stroke-width="2.5" filter="url(#ink-wobble)" />
+        </g>
+        <g transform="translate(138 8)" filter="url(#ink-wobble)">
+          <ellipse class="draw" cx="80" cy="140" rx="34" ry="14" fill="var(--color-accent)" stroke="var(--color-border)" stroke-width="4" />
+          <path d="M64 132c10 6 22 6 32 0" fill="none" stroke="var(--color-background)" stroke-width="2.5" stroke-linecap="round" opacity="0.6" />
+          <path class="draw" d="M80 128v-22M80 106c-6-2-9-7-8-13M80 106c6-2 9-7 8-13" fill="none" stroke="var(--color-border)" stroke-width="3" stroke-linecap="round" />
+        </g>
+
+        <!-- A small bird perched beside the bowl, watching the whisk. -->
+        <g transform="translate(422 168) rotate(4)" filter="url(#ink-wobble)" fill="var(--color-surface)" stroke="var(--color-border)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+          <ellipse class="draw" cx="0" cy="0" rx="19" ry="16" />
+          <path class="draw" d="M17 -3 L32 1 L17 5Z" />
+          <circle cx="8" cy="-6" r="1.8" fill="var(--color-border)" stroke="none" />
+          <path class="draw" d="M-8 -4c-7-4-11 1-8 7" fill="none" stroke-width="2.5" />
+          <path class="draw" d="M-7 15 L-11 24M3 16 L3 25" fill="none" stroke-width="2.5" />
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-foot">
+    <p class={`status annotation ${isOpen ? 'status--open' : 'status--closed'}`}>
+      <span class="stamp">{isOpen ? 'open now' : 'closed'}</span>
+      {addressLine && <span class="status-address">{addressLine}</span>}
+    </p>
+    <div class="actions">
+      {mapsUrl && (
+        <a class="button button--secondary" href={mapsUrl} target="_blank" rel="noopener">
+          Directions
+        </a>
+      )}
+      {orderingLinks?.map((link) => (
+        <a class="button" href={link.url} target="_blank" rel="noopener">
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <div class="hero-tear" aria-hidden="true">
+    <svg class="tear-edge" viewBox="0 0 1200 30" preserveAspectRatio="none">
+      <path
+        d="M0,14 L40,22 L80,6 L120,18 L160,8 L200,20 L240,10 L280,24 L320,6 L360,16 L400,9 L440,22 L480,7 L520,19 L560,10 L600,23 L640,8 L680,17 L720,6 L760,21 L800,9 L840,18 L880,7 L920,22 L960,10 L1000,19 L1040,8 L1080,23 L1120,9 L1160,17 L1200,12"
+        filter="url(#ink-wobble)"
+      />
+    </svg>
+    <div class="tear-shadow crosshatch"></div>
   </div>
 </section>
 
+<script>
+  import {drawIn, parallax, scrollToTarget} from '../scripts/motion'
+
+  const art = document.querySelector('[data-hero-art]')
+  if (art) {
+    const draws = Array.from(art.querySelectorAll<SVGGeometryElement>('.draw'))
+    drawIn(draws, {stagger: 0.05})
+    art.querySelectorAll<SVGGElement>('[data-parallax]').forEach((layer) => {
+      parallax(layer, Number(layer.dataset.parallax))
+    })
+  }
+
+  document.querySelectorAll<HTMLAnchorElement>('[data-hero-nav-link]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      const hash = link.getAttribute('href')
+      if (!hash) return
+      event.preventDefault()
+      scrollToTarget(hash)
+    })
+  })
+</script>
+
 <style>
   .hero {
-    padding: var(--spacing-xl) var(--spacing-sm) var(--spacing-lg);
+    position: relative;
+    padding: clamp(3rem, 6vw, 6rem) var(--spacing-sm) 0;
     text-align: center;
   }
+  .hero-nav {
+    margin: 0 0 clamp(2rem, 5vw, 3.5rem);
+  }
+  .hero-nav-row {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm) var(--spacing-md);
+    width: 50%;
+    margin: 0 auto;
+  }
+  .hero-nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    text-decoration: none;
+    color: var(--color-text);
+    transition: color 150ms ease, transform 150ms ease;
+  }
+  .hero-nav-link-text {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.35rem);
+  }
+  .hero-nav-link-underline {
+    display: block;
+    width: 100%;
+    min-width: 3.5rem;
+    height: 0.5rem;
+  }
+  .hero-nav-link-underline path {
+    fill: none;
+    stroke: var(--color-accent-soft);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+  .hero-nav-link:hover,
+  .hero-nav-link:focus-visible {
+    color: var(--color-accent);
+    transform: translateY(-1px);
+  }
+  .hero-nav-link:hover .hero-nav-link-underline path,
+  .hero-nav-link:focus-visible .hero-nav-link-underline path {
+    stroke: var(--color-accent);
+  }
+  @media (max-width: 640px) {
+    .hero-nav-row {
+      width: 100%;
+    }
+  }
+  .hero-copy {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .name-block {
+    display: inline-block;
+    position: relative;
+  }
+  .name-block h1 {
+    margin-bottom: 0;
+    font-weight: 500;
+  }
+  .underline {
+    display: block;
+    width: 100%;
+    height: 0.35em;
+    margin-top: -0.1em;
+  }
+  .underline path {
+    fill: none;
+    stroke: var(--color-accent-soft);
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
   .tagline {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.15rem, 1rem + 0.5vw, 1.4rem);
     color: var(--color-text-muted);
-    margin: 0 0 var(--spacing-sm);
+    margin: var(--spacing-xs) 0 0;
+  }
+  .hero-art {
+    width: min(760px, 100%);
+    margin: clamp(2rem, 5vw, 4rem) auto 0;
+  }
+  .scene {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .doodle-ring {
+    opacity: 0.9;
+  }
+  .steam {
+    opacity: 0.7;
+  }
+  .hero-foot {
+    margin-top: clamp(1.5rem, 4vw, 3rem);
   }
   .status {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 0.4rem;
+    justify-content: center;
+    gap: 0.6rem;
     margin: 0 0 var(--spacing-md);
+    flex-wrap: wrap;
+  }
+  .stamp {
+    display: inline-block;
+    padding: 0.3rem 0.9rem;
+    border: 2px solid var(--color-status-open);
+    border-radius: 999px;
+    color: var(--color-status-open);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    transform: rotate(-2deg);
+    filter: url(#ink-wobble);
+  }
+  .status--closed .stamp {
+    border-color: var(--color-status-closed);
+    color: var(--color-status-closed);
+    transform: rotate(2deg);
+  }
+  .status-address {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
     color: var(--color-text-muted);
-  }
-  .dot {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-  }
-  .dot--open {
-    background: #3a7d44;
-  }
-  .dot--closed {
-    background: #9a3d3d;
   }
   .actions {
     display: flex;
     gap: var(--spacing-xs);
     justify-content: center;
     flex-wrap: wrap;
+  }
+  .hero-tear {
+    position: relative;
+    margin-top: var(--spacing-lg);
+    width: 100%;
+  }
+  .tear-edge {
+    display: block;
+    width: 100%;
+    height: 1.35rem;
+  }
+  .tear-edge path {
+    fill: none;
+    stroke: var(--color-border);
+    stroke-width: 2;
+    stroke-linejoin: round;
+  }
+  .tear-shadow {
+    height: 0.6rem;
+    opacity: 0.4;
+    mask-image: linear-gradient(to bottom, black, transparent);
   }
 </style>

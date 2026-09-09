@@ -1,0 +1,98 @@
+---
+import {formatHoursLine, getOpenStatus, sortedByWeekStartingSunday, type DayHours} from '../lib/hours'
+
+interface Props {
+  hours?: DayHours[]
+}
+
+const {hours} = Astro.props
+const orderedHours = hours ? sortedByWeekStartingSunday(hours) : []
+const {today} = getOpenStatus(hours)
+---
+
+{orderedHours.length > 0 && (
+  <section class="hours container" id="hours" data-hours-pin>
+    <div class="hours-heading">
+      <h2>Hours</h2>
+      <span class="hours-note annotation" aria-hidden="true">this week</span>
+    </div>
+    <ul class="hours-list">
+      {orderedHours.map((day) => {
+        const isToday = today?.dayOfWeek === day.dayOfWeek
+        return (
+          <li class={`hours-row ${isToday ? 'hours-row--today' : ''}`} data-hours-row>
+            {formatHoursLine(day)}
+            {isToday && <span class="today-mark annotation" aria-hidden="true">today</span>}
+          </li>
+        )
+      })}
+    </ul>
+  </section>
+)}
+
+<script>
+  import {pinSection} from '../scripts/motion'
+
+  const section = document.querySelector<HTMLElement>('[data-hours-pin]')
+  if (section) {
+    const rows = Array.from(section.querySelectorAll<HTMLElement>('[data-hours-row]'))
+    pinSection(section, rows)
+  }
+</script>
+
+<style>
+  .hours {
+    padding: var(--spacing-lg) var(--spacing-sm);
+    max-width: 640px;
+  }
+  .hours-heading {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+  }
+  .hours-heading h2 {
+    margin: 0;
+  }
+  .hours-note {
+    font-size: 1.3rem;
+    color: var(--color-text-muted);
+    transform: rotate(-1.5deg);
+  }
+  .hours-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
+  }
+  .hours-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 0.25rem;
+    border-bottom: 1.5px dashed var(--color-border);
+    font-variant-numeric: tabular-nums;
+  }
+  .hours-row:last-child {
+    border-bottom: none;
+  }
+  .hours-row--today {
+    background: color-mix(in srgb, var(--color-accent-soft) 22%, transparent);
+  }
+  .today-mark {
+    position: relative;
+    font-size: 1rem;
+    color: var(--color-accent);
+    padding: 0.1rem 0.6rem;
+  }
+  .today-mark::before {
+    content: '';
+    position: absolute;
+    inset: -0.05rem -0.1rem;
+    border: 1.5px solid currentColor;
+    border-radius: 999px;
+    filter: url(#ink-wobble);
+    opacity: 0.8;
+  }
+</style>

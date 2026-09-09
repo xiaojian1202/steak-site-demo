@@ -262,7 +262,7 @@ someone will ask for; each turns a $500 template into an unpaid project.
 
 - Online ordering, payments, reservations → point at Toast/Square
 - Blog, multi-location, i18n
-- Analytics dashboards, dark mode
+- Analytics dashboards
 
 ---
 
