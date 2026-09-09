@@ -4,19 +4,73 @@
   box-sizing: border-box;
 }
 
+html {
+  scrollbar-color: var(--color-primary) var(--color-background);
+}
+
 body {
+  position: relative;
   margin: 0;
   background: var(--color-background);
   color: var(--color-text);
   font-family: var(--font-body);
+  font-weight: 400;
   line-height: 1.5;
+}
+
+/* Fixed sketch-paper grain behind every section — one texture layer for the
+   whole page rather than a repeated background-image per component. */
+.paper-ground {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--color-background);
+}
+
+.paper-ground::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  filter: url(#paper-grain);
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+}
+
+.sr-only-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
 }
 
 h1,
 h2,
 h3 {
   font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.01em;
   margin: 0 0 var(--spacing-sm);
+}
+
+h1 {
+  font-size: clamp(2.5rem, 1.5rem + 4.5vw, 4.25rem);
+  line-height: 1.05;
+}
+
+h2 {
+  font-size: clamp(1.75rem, 1.3rem + 2vw, 2.75rem);
+  line-height: 1.1;
+}
+
+h3 {
+  font-size: 1.25rem;
+  line-height: 1.2;
 }
 
 img {
@@ -34,18 +88,92 @@ a {
   padding: 0 var(--spacing-sm);
 }
 
+/* Annotation voice — the marker hand that "wrote on" the page: taglines,
+   margin notes, the stamped open/closed mark. Never used for body copy. */
+.annotation {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+/* Ink-drawn rule: a hand-wobbled line standing in for border/hr/divider,
+   never a straight CSS border in this world. */
+.ink-rule {
+  border: none;
+  height: 2px;
+  background: var(--color-border);
+  filter: url(#ink-wobble);
+}
+
+/* Crosshatch fill — replaces solid color blocks, shadows, and hover states. */
+.crosshatch {
+  background-image: repeating-linear-gradient(45deg, var(--color-border) 0, var(--color-border) 1px, transparent 1px, transparent 6px),
+    repeating-linear-gradient(-45deg, var(--color-border) 0, var(--color-border) 1px, transparent 1px, transparent 6px);
+  background-color: transparent;
+}
+
 .button {
-  display: inline-block;
-  padding: 0.75rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.7rem 1.25rem;
+  border: 1.5px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-primary);
   color: var(--color-primary-contrast);
   text-decoration: none;
+  font-family: var(--font-heading);
   font-weight: 600;
+  filter: url(#ink-wobble);
+  transition: background-color 150ms ease, color 150ms ease, transform 150ms ease;
+}
+
+.button:hover {
+  transform: translateY(-1px) rotate(-0.4deg);
+}
+
+.button:active {
+  transform: translateY(0) rotate(0deg);
 }
 
 .button--secondary {
-  background: transparent;
-  color: var(--color-primary);
-  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+.button--secondary:hover {
+  background-image: repeating-linear-gradient(45deg, var(--color-border) 0, var(--color-border) 1px, transparent 1px, transparent 6px),
+    repeating-linear-gradient(-45deg, var(--color-border) 0, var(--color-border) 1px, transparent 1px, transparent 6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+
+  .button:hover,
+  .button:active {
+    transform: none;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--spacing-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1.5px solid var(--color-border);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  z-index: 10;
+}
+
+.skip-link:focus {
+  top: var(--spacing-xs);
 }

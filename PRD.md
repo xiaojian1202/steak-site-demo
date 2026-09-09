@@ -109,8 +109,8 @@ outreach:
 ## Non-goals for this phase
 
 Everything already listed as a non-goal in `SPEC.md` (online ordering,
-payments, reservations, blog, multi-location, i18n, analytics, dark mode)
-still applies. In addition, for this phase specifically:
+payments, reservations, blog, multi-location, i18n, analytics) still
+applies. In addition, for this phase specifically:
 
 - No bubble tea demo yet.
 - No pre-build shop validation yet.

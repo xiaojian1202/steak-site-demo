@@ -4,6 +4,8 @@ import Hero from '../components/Hero.astro'
 import AnnouncementBanner from '../components/AnnouncementBanner.astro'
 import Menu from '../components/Menu.astro'
 import About from '../components/About.astro'
+import Hours from '../components/Hours.astro'
+import AboutMe from '../components/AboutMe.astro'
 import Footer from '../components/Footer.astro'
 import {sanityClient} from '../lib/sanity'
 import {siteSettingsQuery, activeAnnouncementQuery, menuQuery, pageQuery} from '../lib/queries'
@@ -24,12 +26,15 @@ const [siteSettings, announcement, categories, aboutPage] = await Promise.all([
     mapsUrl={siteSettings?.mapsUrl}
     orderingLinks={siteSettings?.orderingLinks}
     hours={siteSettings?.hours}
+    categories={categories ?? []}
   />
   <AnnouncementBanner message={announcement?.message} link={announcement?.link} />
   <Menu categories={categories ?? []} />
   {aboutPage && (
     <About title={aboutPage.title} body={aboutPage.body} heroImage={aboutPage.heroImage} />
   )}
+  <Hours hours={siteSettings?.hours} />
+  <AboutMe shopName={siteSettings?.shopName} />
   <Footer
     shopName={siteSettings?.shopName}
     address={siteSettings?.address}

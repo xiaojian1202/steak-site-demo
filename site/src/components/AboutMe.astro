@@ -1,0 +1,133 @@
+---
+// Short, static "about us" section — not Sanity-driven. Distinct from the
+// existing `About.astro` (which renders the CMS `page` document when one
+// exists); this is a standing fixture between Hours and Footer, so the
+// story shows even when no about page has been authored in the studio yet.
+interface Props {
+  shopName?: string
+}
+
+const {shopName = 'this little shop'} = Astro.props
+---
+
+<section class="about-me container" id="about-me" data-reveal data-about-me>
+  <div class="about-me-heading">
+    <h2>Our Story</h2>
+    <span class="about-me-note annotation" aria-hidden="true">the short version</span>
+  </div>
+  <div class="about-me-grid">
+    <div class="about-me-art">
+      <svg class="sketch" viewBox="0 0 360 280" aria-hidden="true">
+        <g filter="url(#ink-wobble)" fill="var(--color-surface)" stroke="var(--color-border)" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">
+          <path class="draw" d="M46 268V126L180 54l134 72v142Z" />
+          <path class="draw" d="M40 130 180 52l140 78" fill="none" />
+        </g>
+        <g filter="url(#ink-wobble)" fill="none" stroke="var(--color-accent)" stroke-width="3.5" stroke-linecap="round">
+          <path class="draw" d="M64 128h232" />
+          <path class="draw" d="M64 128 46 268M296 128l18 140" />
+        </g>
+        <g transform="translate(150 150)" filter="url(#ink-wobble)" fill="var(--color-background)" stroke="var(--color-border)" stroke-width="4" stroke-linejoin="round">
+          <path class="draw" d="M0 0h60v78H0Z" />
+          <path class="draw" d="M30 0v78M0 39h60" stroke-width="2.5" />
+        </g>
+        <g transform="translate(150 150) translate(30 39)" filter="url(#ink-wobble)">
+          <path class="draw" d="M-11 20c3-9 3-16-2-24 4 2 8 1 9-3 3 6 7 8 12 6-4 6-2 13 3 17-7 5-15 6-22 4Z" fill="var(--color-accent-soft)" stroke="var(--color-border)" stroke-width="2.5" stroke-linejoin="round" />
+        </g>
+        <g transform="translate(96 176)" filter="url(#ink-wobble)" fill="var(--color-surface)" stroke="var(--color-border)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+          <path class="draw" d="M0 0h30v58H0Z" />
+        </g>
+        <g transform="translate(234 176)" filter="url(#ink-wobble)" fill="var(--color-surface)" stroke="var(--color-border)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+          <path class="draw" d="M0 0h30v58H0Z" />
+        </g>
+        <g transform="translate(148 190) rotate(-3)" filter="url(#ink-wobble-lg)" fill="var(--color-surface)" stroke="var(--color-border)" stroke-width="3.5" stroke-linejoin="round">
+          <rect class="draw" x="0" y="0" width="64" height="26" />
+        </g>
+        <g transform="translate(148 190) rotate(-3) translate(6 7)" fill="none" stroke="var(--color-accent)" stroke-width="2.5" stroke-linecap="round">
+          <path class="draw" d="M4 6h44M4 12h30" />
+        </g>
+        <g fill="none" stroke="var(--color-text-muted)" stroke-width="2.5" stroke-linecap="round" filter="url(#ink-wobble)" opacity="0.75">
+          <path class="draw" d="M108 168c-6-8 4-13-2-22" />
+          <path class="draw" d="M262 168c-6-8 4-13-2-22" />
+        </g>
+      </svg>
+    </div>
+    <div class="about-me-copy">
+      <p>
+        {shopName} started as a two-burner setup and a bag of
+        ceremonial-grade matcha someone brought back from a trip to Uji.
+        What was meant to be one weekend pop-up for friends turned into a
+        line out the door, and then into an actual lease.
+      </p>
+      <p>
+        Every bowl is still whisked to order, by hand, the same way it was
+        on day one — no powdered mixes, no syrup shortcuts. We bake the
+        pastry case fresh each morning and keep the shop small on purpose,
+        because the whole point was always a slower cup, poured by someone
+        who knows your order.
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import {revealOnScroll, drawIn} from '../scripts/motion'
+
+  const section = document.querySelector('[data-about-me]')
+  if (section) {
+    revealOnScroll(section, {y: 26})
+    const draws = Array.from(section.querySelectorAll<SVGGeometryElement>('.draw'))
+    drawIn(draws, {stagger: 0.04})
+  }
+</script>
+
+<style>
+  .about-me {
+    padding: var(--spacing-lg) var(--spacing-sm);
+    max-width: 800px;
+  }
+  .about-me-heading {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+  }
+  .about-me-heading h2 {
+    margin: 0;
+  }
+  .about-me-note {
+    font-size: 1.3rem;
+    color: var(--color-text-muted);
+    transform: rotate(-1.5deg);
+  }
+  .about-me-grid {
+    display: grid;
+    grid-template-columns: minmax(200px, 260px) 1fr;
+    gap: var(--spacing-lg);
+    align-items: center;
+  }
+  .about-me-art {
+    transform: rotate(-0.8deg);
+  }
+  .sketch {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .about-me-copy p {
+    margin: 0 0 var(--spacing-sm);
+    color: var(--color-text);
+    max-width: 60ch;
+  }
+  .about-me-copy p:last-child {
+    margin-bottom: 0;
+  }
+  @media (max-width: 700px) {
+    .about-me-grid {
+      grid-template-columns: 1fr;
+    }
+    .about-me-art {
+      max-width: 260px;
+      margin: 0 auto;
+    }
+  }
+</style>
