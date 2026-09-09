@@ -48,44 +48,27 @@ const addressLine = [address?.street, address?.city].filter(Boolean).join(', ')
 
   <div class="hero-art" data-hero-art>
     <svg class="scene" viewBox="0 0 520 320" aria-hidden="true">
-      <!-- Background layer: steam, drifts slower on scroll. -->
-      <g data-parallax="0.25">
-        <g class="steam" fill="none" stroke="var(--color-text-muted)" stroke-width="2.5" stroke-linecap="round" filter="url(#ink-wobble)">
-          <path class="draw" d="M262 156c-9-10 5-16-3-27c-8-11 4-18-3-29" />
-          <path class="draw" d="M278 160c-8-9 5-15-2-26c-7-11 4-17-2-27" />
-        </g>
-      </g>
-
-      <!-- Foreground layer: cat mid-whisk, matcha bowl, a small bird. -->
+      <!-- Foreground layer: cat mid-whisk with matcha bowl, centered in the scene. -->
       <g data-parallax="0.7">
         <!-- Doodle ring sits behind the bowl so the bowl reads as resting inside it. -->
-        <ellipse class="doodle-ring draw" cx="218" cy="138" rx="52" ry="36" fill="none" stroke="var(--color-accent-soft)" stroke-width="3.5" filter="url(#ink-wobble-lg)" />
-        <g transform="translate(138 8)" filter="url(#ink-wobble)" fill="var(--color-surface)" stroke="var(--color-border)" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">
+        <ellipse class="doodle-ring draw" cx="260" cy="138" rx="52" ry="36" fill="none" stroke="var(--color-accent-soft)" stroke-width="3.5" filter="url(#ink-wobble-lg)" />
+        <g transform="translate(180 8)" filter="url(#ink-wobble)" fill="var(--color-surface)" stroke="var(--color-border)" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">
           <path class="draw" d="M56 46 42 12 74 34Z" />
           <path class="draw" d="M104 46 118 12 86 34Z" />
           <circle class="draw" cx="80" cy="64" r="34" />
           <path class="draw" d="M52 84c-4 20-2 30 2 36h52c4-6 6-16 2-36" />
         </g>
-        <g transform="translate(138 8)" fill="none" stroke="var(--color-border)" stroke-linecap="round">
+        <g transform="translate(180 8)" fill="none" stroke="var(--color-border)" stroke-linecap="round">
           <circle cx="68" cy="60" r="2.6" fill="var(--color-border)" stroke="none" />
           <circle cx="92" cy="60" r="2.6" fill="var(--color-border)" stroke="none" />
           <path class="draw" d="M76 70c2 2 6 2 8 0" stroke-width="3.5" filter="url(#ink-wobble)" />
           <path class="draw" d="M50 62 30 58M50 68 28 68M50 74 30 80" stroke-width="2.5" filter="url(#ink-wobble)" />
           <path class="draw" d="M110 62 130 58M110 68 132 68M110 74 130 80" stroke-width="2.5" filter="url(#ink-wobble)" />
         </g>
-        <g transform="translate(138 8)" filter="url(#ink-wobble)">
+        <g transform="translate(180 8)" filter="url(#ink-wobble)">
           <ellipse class="draw" cx="80" cy="140" rx="34" ry="14" fill="var(--color-accent)" stroke="var(--color-border)" stroke-width="4" />
-          <path d="M64 132c10 6 22 6 32 0" fill="none" stroke="var(--color-background)" stroke-width="2.5" stroke-linecap="round" opacity="0.6" />
+          <path d="M64 142c10 6 22 6 32 0" fill="none" stroke="var(--color-background)" stroke-width="2.5" stroke-linecap="round" opacity="0.6" />
           <path class="draw" d="M80 128v-22M80 106c-6-2-9-7-8-13M80 106c6-2 9-7 8-13" fill="none" stroke="var(--color-border)" stroke-width="3" stroke-linecap="round" />
-        </g>
-
-        <!-- A small bird perched beside the bowl, watching the whisk. -->
-        <g transform="translate(422 168) rotate(4)" filter="url(#ink-wobble)" fill="var(--color-surface)" stroke="var(--color-border)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
-          <ellipse class="draw" cx="0" cy="0" rx="19" ry="16" />
-          <path class="draw" d="M17 -3 L32 1 L17 5Z" />
-          <circle cx="8" cy="-6" r="1.8" fill="var(--color-border)" stroke="none" />
-          <path class="draw" d="M-8 -4c-7-4-11 1-8 7" fill="none" stroke-width="2.5" />
-          <path class="draw" d="M-7 15 L-11 24M3 16 L3 25" fill="none" stroke-width="2.5" />
         </g>
       </g>
     </svg>
