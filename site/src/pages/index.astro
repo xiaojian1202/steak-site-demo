@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Hero from '../components/Hero.astro'
+import AnnouncementBanner from '../components/AnnouncementBanner.astro'
+import Menu from '../components/Menu.astro'
+import About from '../components/About.astro'
+import Footer from '../components/Footer.astro'
+import {sanityClient} from '../lib/sanity'
+import {siteSettingsQuery, activeAnnouncementQuery, menuQuery, pageQuery} from '../lib/queries'
+
+const [siteSettings, announcement, categories, aboutPage] = await Promise.all([
+  sanityClient.fetch(siteSettingsQuery),
+  sanityClient.fetch(activeAnnouncementQuery),
+  sanityClient.fetch(menuQuery),
+  sanityClient.fetch(pageQuery, {slug: 'about'}),
+])
+---
+
+<BaseLayout title={siteSettings?.seo?.metaTitle ?? siteSettings?.shopName ?? 'Café'} description={siteSettings?.seo?.metaDescription}>
+  <Hero
+    shopName={siteSettings?.shopName}
+    tagline={siteSettings?.tagline}
+    address={siteSettings?.address}
+    mapsUrl={siteSettings?.mapsUrl}
+    orderingLinks={siteSettings?.orderingLinks}
+    hours={siteSettings?.hours}
+  />
+  <AnnouncementBanner message={announcement?.message} link={announcement?.link} />
+  <Menu categories={categories ?? []} />
+  {aboutPage && (
+    <About title={aboutPage.title} body={aboutPage.body} heroImage={aboutPage.heroImage} />
+  )}
+  <Footer
+    shopName={siteSettings?.shopName}
+    address={siteSettings?.address}
+    phone={siteSettings?.phone}
+    mapsUrl={siteSettings?.mapsUrl}
+    hours={siteSettings?.hours}
+    holidayNote={siteSettings?.holidayNote}
+    social={siteSettings?.social}
+  />
+</BaseLayout>

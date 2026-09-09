@@ -1,0 +1,41 @@
+---
+import {urlFor} from '../lib/sanity'
+
+// Portable text blocks from the `page` schema's `body` field. Rendered as
+// plain paragraphs — a café About section doesn't need rich formatting.
+interface PortableTextBlock {
+  _type: 'block'
+  children?: {text: string}[]
+}
+
+interface Props {
+  title: string
+  body?: PortableTextBlock[]
+  heroImage?: unknown
+}
+
+const {title, body, heroImage} = Astro.props
+
+function blockText(block: PortableTextBlock): string {
+  return block.children?.map((child) => child.text).join('') ?? ''
+}
+---
+
+<section class="about container" id="about">
+  <h2>{title}</h2>
+  {heroImage && (
+    <img src={urlFor(heroImage).width(800).url()} alt="" loading="lazy" />
+  )}
+  {body?.map((block) => <p>{blockText(block)}</p>)}
+</section>
+
+<style>
+  .about {
+    padding: var(--spacing-lg) var(--spacing-sm);
+    max-width: 640px;
+  }
+  .about img {
+    border-radius: var(--radius-md);
+    margin: var(--spacing-sm) 0;
+  }
+</style>

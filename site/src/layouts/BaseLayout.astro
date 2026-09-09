@@ -1,0 +1,65 @@
+---
+import '../styles/global.css'
+import {theme} from '../theme'
+
+interface Props {
+  title: string
+  description?: string
+}
+
+const {title, description} = Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <style define:vars={{
+      colorBackground: theme.colors.background,
+      colorSurface: theme.colors.surface,
+      colorText: theme.colors.text,
+      colorTextMuted: theme.colors.textMuted,
+      colorPrimary: theme.colors.primary,
+      colorPrimaryContrast: theme.colors.primaryContrast,
+      colorAccent: theme.colors.accent,
+      colorBorder: theme.colors.border,
+      fontHeading: theme.fonts.heading,
+      fontBody: theme.fonts.body,
+      radiusSm: theme.radius.sm,
+      radiusMd: theme.radius.md,
+      radiusLg: theme.radius.lg,
+      spacingXs: theme.spacing.xs,
+      spacingSm: theme.spacing.sm,
+      spacingMd: theme.spacing.md,
+      spacingLg: theme.spacing.lg,
+      spacingXl: theme.spacing.xl,
+    }}>
+      :root {
+        --color-background: var(--colorBackground);
+        --color-surface: var(--colorSurface);
+        --color-text: var(--colorText);
+        --color-text-muted: var(--colorTextMuted);
+        --color-primary: var(--colorPrimary);
+        --color-primary-contrast: var(--colorPrimaryContrast);
+        --color-accent: var(--colorAccent);
+        --color-border: var(--colorBorder);
+        --font-heading: var(--fontHeading);
+        --font-body: var(--fontBody);
+        --radius-sm: var(--radiusSm);
+        --radius-md: var(--radiusMd);
+        --radius-lg: var(--radiusLg);
+        --spacing-xs: var(--spacingXs);
+        --spacing-sm: var(--spacingSm);
+        --spacing-md: var(--spacingMd);
+        --spacing-lg: var(--spacingLg);
+        --spacing-xl: var(--spacingXl);
+      }
+    </style>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

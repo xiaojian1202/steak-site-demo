@@ -1,0 +1,73 @@
+---
+import {getOpenStatus} from '../lib/hours'
+
+interface Props {
+  shopName: string
+  tagline?: string
+  address?: {street?: string; city?: string; state?: string; zip?: string}
+  mapsUrl?: string
+  orderingLinks?: {label: string; url: string}[]
+  hours?: {dayOfWeek: number; closed?: boolean; open?: string; close?: string}[]
+}
+
+const {shopName, tagline, address, mapsUrl, orderingLinks, hours} = Astro.props
+const {isOpen} = getOpenStatus(hours)
+const addressLine = [address?.street, address?.city].filter(Boolean).join(', ')
+---
+
+<section class="hero container">
+  <h1>{shopName}</h1>
+  {tagline && <p class="tagline">{tagline}</p>}
+  <p class="status">
+    <span class={`dot ${isOpen ? 'dot--open' : 'dot--closed'}`}></span>
+    {isOpen ? 'Open now' : 'Closed'}
+    {addressLine && ` · ${addressLine}`}
+  </p>
+  <div class="actions">
+    {mapsUrl && (
+      <a class="button button--secondary" href={mapsUrl} target="_blank" rel="noopener">
+        Directions
+      </a>
+    )}
+    {orderingLinks?.map((link) => (
+      <a class="button" href={link.url} target="_blank" rel="noopener">
+        {link.label}
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: var(--spacing-xl) var(--spacing-sm) var(--spacing-lg);
+    text-align: center;
+  }
+  .tagline {
+    color: var(--color-text-muted);
+    margin: 0 0 var(--spacing-sm);
+  }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 0 var(--spacing-md);
+    color: var(--color-text-muted);
+  }
+  .dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+  }
+  .dot--open {
+    background: #3a7d44;
+  }
+  .dot--closed {
+    background: #9a3d3d;
+  }
+  .actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>

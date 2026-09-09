@@ -1,0 +1,149 @@
+---
+import {urlFor} from '../lib/sanity'
+
+interface MenuItem {
+  _id: string
+  name: string
+  description?: string
+  price: number
+  priceVariants?: {label: string; price: number}[]
+  image?: unknown
+  available?: boolean
+  tags?: string[]
+}
+
+interface MenuCategory {
+  _id: string
+  title: string
+  description?: string
+  items: MenuItem[]
+}
+
+interface Props {
+  categories: MenuCategory[]
+}
+
+const {categories} = Astro.props
+
+function formatPrice(price: number): string {
+  return `$${price.toFixed(2)}`
+}
+---
+
+<section class="menu container" id="menu">
+  <h2>Menu</h2>
+  {categories.map((category) => (
+    <div class="category">
+      <h3>{category.title}</h3>
+      {category.description && <p class="category-description">{category.description}</p>}
+      <ul class="items">
+        {category.items
+          .filter((item) => item.available !== false)
+          .map((item) => (
+            <li class="item">
+              {item.image && (
+                <img
+                  class="item-image"
+                  src={urlFor(item.image).width(96).height(96).url()}
+                  alt=""
+                  loading="lazy"
+                />
+              )}
+              <div class="item-body">
+                <div class="item-line">
+                  <span class="item-name">{item.name}</span>
+                  {!item.priceVariants?.length && (
+                    <span class="item-price">{formatPrice(item.price)}</span>
+                  )}
+                </div>
+                {item.description && <p class="item-description">{item.description}</p>}
+                {item.priceVariants && item.priceVariants.length > 0 && (
+                  <ul class="variants">
+                    {item.priceVariants.map((variant) => (
+                      <li>
+                        {variant.label}: {formatPrice(variant.price)}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {item.tags && item.tags.length > 0 && (
+                  <ul class="tags">
+                    {item.tags.map((tag) => (
+                      <li class="tag">{tag}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </li>
+          ))}
+      </ul>
+    </div>
+  ))}
+</section>
+
+<style>
+  .menu {
+    padding: var(--spacing-lg) var(--spacing-sm);
+  }
+  .category {
+    margin-bottom: var(--spacing-lg);
+  }
+  .category-description {
+    color: var(--color-text-muted);
+  }
+  .items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .item {
+    display: flex;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .item-image {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .item-body {
+    flex: 1;
+  }
+  .item-line {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+    font-weight: 600;
+  }
+  .item-description {
+    margin: 0.25rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+  .variants {
+    list-style: none;
+    margin: 0.25rem 0 0;
+    padding: 0;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+  }
+  .tags {
+    list-style: none;
+    display: flex;
+    gap: 0.4rem;
+    margin: 0.4rem 0 0;
+    padding: 0;
+  }
+  .tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--color-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.1rem 0.4rem;
+  }
+</style>
