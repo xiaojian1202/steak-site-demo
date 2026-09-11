@@ -3,38 +3,38 @@
 // back into the shared components) or scope creep (bill it).
 export const theme = {
   colors: {
-    background: '#f1ebe1',
+    background: '#eaceaa',
     surface: '#ffffff',
-    text: '#2c3a2f',
-    textMuted: '#5c6b5c',
-    primary: '#44624a',
-    primaryContrast: '#f1ebe1',
-    accent: '#44624a',
-    accentContrast: '#f1ebe1',
-    // Secondary matcha accent — hover fills, "today" highlights, category
-    // icon strokes — so the palette's mid-green swatch gets used too,
-    // not just the deep primary/accent green.
-    accentSoft: '#8ba888',
-    border: '#2c3a2f',
-    statusOpen: '#44624a',
-    statusClosed: '#a3583f',
+    text: '#150c0c',
+    textMuted: '#85431e',
+    primary: '#34150f',
+    primaryContrast: '#eaceaa',
+    accent: '#d39858',
+    accentContrast: '#150c0c',
+    // Secondary whiskey-sour accent — hover fills, "today" highlights,
+    // category icon strokes — the light mid-tone against the dark
+    // primary, not just the deep browns.
+    accentSoft: '#eaceaa',
+    border: '#150c0c',
+    statusOpen: '#85431e',
+    statusClosed: '#34150f',
   },
   // Dark variant of `colors`, applied via prefers-color-scheme in
   // BaseLayout. Same keys, same contrast intent — swap the pair, not the
   // relationships between them.
   darkColors: {
-    background: '#1b2620',
-    surface: '#24322a',
-    text: '#eef1e9',
-    textMuted: '#aebfae',
-    primary: '#a9c39a',
-    primaryContrast: '#152019',
-    accent: '#a9c39a',
-    accentContrast: '#152019',
-    accentSoft: '#8ba888',
-    border: '#cdd8c8',
-    statusOpen: '#a9c39a',
-    statusClosed: '#dd9c85',
+    background: '#150c0c',
+    surface: '#34150f',
+    text: '#eaceaa',
+    textMuted: '#d39858',
+    primary: '#d39858',
+    primaryContrast: '#150c0c',
+    accent: '#eaceaa',
+    accentContrast: '#150c0c',
+    accentSoft: '#85431e',
+    border: '#eaceaa',
+    statusOpen: '#d39858',
+    statusClosed: '#eaceaa',
   },
   fonts: {
     // Marker/hand-lettered display voice for the shop name and annotations,

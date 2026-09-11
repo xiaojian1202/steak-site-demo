@@ -1,0 +1,1300 @@
+---
+/*
+ * Ember & Oak steakhouse landing page.
+ *
+ * Imported from the Claude Design project "Cinder Steakhouse"
+ * (1c2a3d37-fad1-49ad-b6cb-22b3d066a6d2, file `Cinder Steakhouse.dc.html`).
+ * Copy, imagery, layout and the Moon design-system tokens all come from that
+ * source; see `src/styles/moon-tokens.css` for the tokens and
+ * `src/scripts/cinder.ts` for the interaction model.
+ *
+ * This page is standalone rather than built on BaseLayout: the café layout
+ * carries its own fonts, paper-grain filters and theme variables, none of
+ * which belong in this world.
+ */
+import '@fontsource/playfair-display/400.css'
+import '@fontsource/playfair-display/400-italic.css'
+import '@fontsource/playfair-display/500.css'
+import '@fontsource/playfair-display/600.css'
+import '@fontsource/playfair-display/700.css'
+import '@fontsource/archivo/400.css'
+import '@fontsource/archivo/500.css'
+import '@fontsource/archivo/600.css'
+import '../styles/moon-tokens.css'
+import {Image} from 'astro:assets'
+import heroTomahawk from '../assets/cinder/hero-tomahawk-board.png'
+import chefAtGrill from '../assets/cinder/nanxi-wei-TVzSWDntlOM-unsplash.jpg'
+import carvedTomahawk from '../assets/cinder/sebastian-doll-wxt4m8ECpgM-unsplash.jpg'
+import boneInRibeye from '../assets/cinder/bone-in-ribeye.png'
+import wagyuTartare from '../assets/cinder/alexandra-tran-fWfRv-qdlUU-unsplash.jpg'
+import boneMarrow from '../assets/cinder/roasted-bone-marrow.png'
+import chocolateSouffle from '../assets/cinder/max-griss-Pzjez86SsvQ-unsplash.jpg'
+
+const phone = '(555) 123-4567'
+const phoneHref = 'tel:+15551234567'
+
+const navLinks = [
+  {label: 'Menu', href: '#menu'},
+  {label: 'About', href: '#about'},
+  {label: 'Gallery', href: '#gallery'},
+  {label: 'Hours', href: '#hours'},
+]
+
+/** Two columns, each a stack of named groups — matches the design's layout. */
+const menuColumns = [
+  [
+    {
+      title: 'Starters',
+      items: [
+        {name: 'Oysters on the half shell', price: '$24'},
+        {name: 'Wagyu beef tartare', price: '$26'},
+        {name: 'Charred octopus', price: '$28'},
+        {name: 'Classic wedge salad', price: '$18'},
+      ],
+    },
+    {
+      title: 'Sides',
+      items: [
+        {name: 'Truffle pommes purée', price: '$16'},
+        {name: 'Creamed spinach', price: '$14'},
+        {name: 'Roasted bone marrow', price: '$19'},
+        {name: 'Grilled asparagus, béarnaise', price: '$15'},
+      ],
+    },
+  ],
+  [
+    {
+      title: 'Steaks & chops',
+      items: [
+        {name: 'Filet mignon, 8 oz', price: '$58', note: '28-day dry-aged'},
+        {name: 'New York strip, 16 oz', price: '$72', note: '35-day dry-aged'},
+        {name: 'Bone-in ribeye, 22 oz', price: '$89', note: '40-day dry-aged'},
+        {name: 'Tomahawk for two, 40 oz', price: '$165', note: '45-day dry-aged, carved tableside'},
+        {name: 'A5 Japanese wagyu', price: '$36/oz', note: 'by the ounce, seared tableside'},
+        {name: 'Colorado lamb chops', price: '$64'},
+      ],
+    },
+    {
+      title: 'Desserts',
+      items: [
+        {name: 'Butterscotch crème brûlée', price: '$14'},
+        {name: 'Dark chocolate soufflé', price: '$16'},
+        {name: 'Seasonal fruit tart', price: '$13'},
+      ],
+    },
+  ],
+]
+
+/*
+ * `tint` is the gradient behind each frame while its photo loads, `focus` and
+ * `zoom` reproduce the crops chosen in the design canvas, and `drift` is the
+ * counter-scroll amplitude in pixels.
+ */
+const gallery = [
+  {
+    src: carvedTomahawk,
+    width: 1280,
+    alt: 'Tomahawk steak, carved tableside',
+    caption: 'Tomahawk for two, carved tableside',
+    tint: 'linear-gradient(160deg, var(--umber-500), var(--espresso-800))',
+    focus: '50% 75%',
+    zoom: 1,
+    drift: 18,
+  },
+  {
+    src: boneInRibeye,
+    width: 900,
+    alt: 'Bone-in ribeye, grilled',
+    caption: 'Bone-in ribeye, 40-day dry-aged',
+    tint: 'linear-gradient(160deg, var(--rust-500), var(--espresso-800))',
+    focus: '50% 50%',
+    zoom: 1,
+    drift: 12,
+  },
+  {
+    src: wagyuTartare,
+    // Cropped to 1.9x in the design, so it needs the extra source pixels.
+    width: 1600,
+    alt: 'Wagyu beef tartare with egg yolk',
+    caption: 'Wagyu tartare',
+    tint: 'linear-gradient(160deg, var(--umber-400), var(--espresso-900))',
+    focus: '50% 60%',
+    zoom: 1.9,
+    drift: 12,
+  },
+  {
+    src: boneMarrow,
+    width: 900,
+    alt: 'Roasted bone marrow with grilled toast',
+    caption: 'Roasted bone marrow',
+    tint: 'linear-gradient(160deg, var(--gold-500), var(--espresso-800))',
+    focus: '50% 50%',
+    zoom: 1,
+    drift: 14,
+  },
+  {
+    src: chocolateSouffle,
+    width: 1100,
+    alt: 'Dark chocolate soufflé',
+    caption: 'Dark chocolate soufflé',
+    tint: 'linear-gradient(160deg, var(--espresso-700), var(--espresso-950))',
+    focus: '0% 55%',
+    zoom: 1.15,
+    drift: 14,
+  },
+]
+
+const hours = [
+  {days: 'Monday', time: 'Closed'},
+  {days: 'Tuesday – Thursday', time: '5:00 pm – 10:00 pm'},
+  {days: 'Friday – Saturday', time: '5:00 pm – 11:00 pm'},
+  {days: 'Sunday', time: '4:00 pm – 9:00 pm'},
+]
+
+const partySizes = ['2 guests', '4 guests', '6 guests', '8+ guests']
+
+const year = new Date().getFullYear()
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ember &amp; Oak — Dry-aged in house, finished over oak</title>
+    <meta
+      name="description"
+      content="Ember &amp; Oak is a steakhouse in the Ember District: prime cuts dry-aged 28 to 45 days, finished over white oak, and a cellar of 400 wines."
+    />
+    <meta name="color-scheme" content="dark light" />
+  </head>
+  <body>
+    <div aria-hidden="true" class="scroll-progress" data-scroll-progress></div>
+
+    <header class="site-header" data-header>
+      <a class="brand" href="#top">Ember &amp; Oak</a>
+
+      <nav class="site-nav" aria-label="Primary">
+        {navLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn btn--primary btn--sm" type="button" data-reserve-open>
+          <span class="header-actions__full">Reserve a table</span>
+          <span class="header-actions__short">Reserve</span>
+        </button>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-label="Toggle menu"
+          aria-expanded="false"
+          aria-controls="mobile-nav"
+          data-nav-toggle
+        >
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Primary mobile" data-nav-panel hidden>
+      {navLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+    </nav>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero__media" aria-hidden="true" data-hero-media>
+          <Image
+            src={heroTomahawk}
+            alt=""
+            widths={[900, 1440]}
+            sizes="100vw"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+        <div class="hero__shade" aria-hidden="true"></div>
+        <div class="hero__vignette" aria-hidden="true"></div>
+
+        <div class="hero__content" data-fade>
+          <p class="eyebrow hero__eyebrow">Est. 2011 — dry-aged, fire-finished</p>
+          <h1>Dry-aged in house.<br />Finished over oak.</h1>
+          <p class="hero__lede">
+            Prime cuts, a deep wine cellar, and service that remembers your name.
+          </p>
+          <div class="hero__actions">
+            <button class="btn btn--primary btn--lg" type="button" data-reserve-open>
+              Reserve a table
+            </button>
+            <a class="hero__menu-link" href="#menu">View the menu</a>
+          </div>
+        </div>
+
+        <p class="hero__cue">Scroll to explore</p>
+      </section>
+
+      <section class="about" id="about">
+        <div class="about__frame reveal reveal--zoom" aria-hidden="true" data-reveal data-parallax="24">
+          <Image src={chefAtGrill} alt="" width={1200} loading="lazy" />
+        </div>
+        <div class="about__text reveal" data-reveal>
+          <p class="eyebrow about__eyebrow">The House</p>
+          <h2>Every table faces the hearth.</h2>
+          <p>
+            Founded in 2011 by Chef Marguerite Solano, Ember &amp; Oak began as a single grill and a
+            promise: age it longer, cook it simpler.
+          </p>
+          <p>
+            Our beef comes from a small ranch in the Sandhills and rests 28 to 45 days in our own
+            aging room before it meets the fire — white oak, always, never gas.
+          </p>
+          <p>Below the dining room, a cellar of 400 wines waits for the right occasion.</p>
+        </div>
+      </section>
+
+      <section class="menu" id="menu">
+        <div class="menu__inner">
+          <div class="menu__head reveal" data-reveal>
+            <p class="eyebrow menu__eyebrow">The Menu</p>
+            <h2>Cuts of the season</h2>
+            <p class="menu__note">A short cellar note: our sommelier pairs each course by request.</p>
+          </div>
+
+          <div class="menu__columns">
+            {
+              menuColumns.map((column) => (
+                <div>
+                  {column.map((group) => (
+                    <div class="menu__group">
+                      <h3>{group.title}</h3>
+                      <ul>
+                        {group.items.map((item) => (
+                          <li>
+                            <span class="menu__row">
+                              <span class="menu__name">{item.name}</span>
+                              <span class="menu__leader" aria-hidden="true"></span>
+                              <span class="menu__price">{item.price}</span>
+                            </span>
+                            {item.note && <span class="menu__item-note">{item.note}</span>}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              ))
+            }
+          </div>
+
+          <p class="menu__footnote">
+            Menu changes with the season. Please tell your server about any allergies.
+          </p>
+          <div class="menu__cta">
+            <button class="btn btn--secondary btn--md" type="button" data-reserve-open>
+              Reserve a table
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="gallery" id="gallery">
+        <h2 class="gallery__title reveal" data-reveal>Signature dishes</h2>
+        <div class="gallery__rail">
+          {
+            gallery.map((dish, index) => (
+              <figure
+                class="gallery__item reveal reveal--zoom"
+                data-reveal
+                data-parallax={dish.drift}
+                style={`background:${dish.tint};transition-delay:${index * 90}ms;`}
+              >
+                <Image
+                  src={dish.src}
+                  width={dish.width}
+                  alt={dish.alt}
+                  loading="lazy"
+                  style={`object-position:${dish.focus};transform:scale(${dish.zoom});`}
+                />
+                <figcaption>{dish.caption}</figcaption>
+              </figure>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="hours" id="hours">
+        <div>
+          <h2 class="hours__title reveal" data-reveal>Hours &amp; location</h2>
+          <ul class="hours__list">
+            {
+              hours.map((row) => (
+                <li>
+                  <span>{row.days}</span>
+                  <span class="hours__time">{row.time}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <p class="hours__note">
+            Bar &amp; lounge stays open until midnight, Wednesday through Saturday.
+          </p>
+
+          <address class="hours__address">
+            <span>412 Kettner Row, Ember District</span>
+            <a class="hours__phone" href={phoneHref}>{phone}</a>
+          </address>
+          <a class="hours__directions" href="https://maps.google.com" target="_blank" rel="noopener">
+            Get directions
+          </a>
+
+          <ul class="hours__meta">
+            <li>Dress code: smart casual</li>
+            <li>Valet parking available after 5:00 pm</li>
+            <li>Private dining room available for parties of 10–24</li>
+          </ul>
+        </div>
+        <div class="hours__map" aria-hidden="true">
+          <span>Dimmed map placeholder</span>
+        </div>
+      </section>
+
+      <section class="closing">
+        <h2 class="closing__title reveal" data-reveal>Your table is waiting.</h2>
+        <div class="closing__actions">
+          <button class="btn btn--primary btn--lg" type="button" data-reserve-open>
+            Reserve a table
+          </button>
+        </div>
+        <p class="closing__note">
+          Parties of 8 or more, and private events: <a href={phoneHref}>{phone}</a>
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__grid">
+        <div>
+          <p class="site-footer__brand">Ember &amp; Oak</p>
+          <p class="site-footer__muted">412 Kettner Row, Ember District</p>
+        </div>
+        <div>
+          <p><a href={phoneHref}>{phone}</a></p>
+          <p><a href="mailto:reservations@emberandoak.com">reservations@emberandoak.com</a></p>
+        </div>
+        <div>
+          <p><a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a></p>
+          <p><a href="#">Gift cards</a></p>
+        </div>
+      </div>
+      <p class="site-footer__legal">© {year} Ember &amp; Oak</p>
+    </footer>
+
+    <dialog class="reserve" aria-labelledby="reserve-title" data-reserve-dialog>
+      <div class="reserve__head">
+        <h2 id="reserve-title">Reserve a table</h2>
+        <button class="reserve__close" type="button" aria-label="Close" data-reserve-close>×</button>
+      </div>
+
+      <div class="reserve__body">
+        <form>
+          <label class="field">
+            <span class="field__label">Date</span>
+            <input type="date" name="date" required />
+          </label>
+
+          <div class="field-row">
+            <label class="field">
+              <span class="field__label">Time</span>
+              <input type="time" name="time" value="19:30" required />
+            </label>
+            <label class="field">
+              <span class="field__label">Party size</span>
+              <select name="partySize">
+                {partySizes.map((size) => <option value={size}>{size}</option>)}
+              </select>
+            </label>
+          </div>
+
+          <label class="field">
+            <span class="field__label">Full name</span>
+            <input type="text" name="name" placeholder="Jane Doe" autocomplete="name" required />
+          </label>
+
+          <label class="field">
+            <span class="field__label">Phone or email</span>
+            <input type="text" name="contact" placeholder="jane@example.com" required />
+          </label>
+
+          <label class="field">
+            <span class="field__label">Note for a special occasion (optional)</span>
+            <input type="text" name="note" placeholder="Anniversary, birthday…" />
+          </label>
+
+          <button class="btn btn--primary btn--lg btn--block" type="submit">
+            Confirm reservation
+          </button>
+        </form>
+
+        <div data-confirmation hidden>
+          <p class="reserve__confirm">
+            Reservation confirmed. We'll see you on <span data-confirm-when></span>.
+          </p>
+          <button class="btn btn--dark btn--md" type="button" data-reserve-close>Done</button>
+        </div>
+      </div>
+    </dialog>
+
+    <script>
+      import '../scripts/cinder'
+    </script>
+
+    <style>
+      :global(html) {
+        scroll-padding-top: 92px;
+        scroll-behavior: smooth;
+      }
+
+      :global(body) {
+        margin: 0;
+        font-family: var(--font-sans);
+        background: var(--surface-page);
+        color: var(--text-primary);
+        line-height: var(--lh-normal);
+        overflow-x: hidden;
+      }
+
+      /* The mobile nav panel and the dialog's form/confirmation are toggled
+         with the `hidden` attribute; their own `display` rules would otherwise
+         beat the user-agent `[hidden] { display: none }`. */
+      [hidden] {
+        display: none !important;
+      }
+
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: var(--ls-wider);
+        text-transform: uppercase;
+        margin: 0;
+      }
+
+      /* ---- Design-system Button -------------------------------------- */
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-sans);
+        font-weight: var(--weight-medium);
+        letter-spacing: var(--ls-wide);
+        text-transform: uppercase;
+        border: 1px solid transparent;
+        border-radius: var(--radius-pill);
+        cursor: pointer;
+        transition:
+          background var(--duration-base) var(--ease-standard),
+          color var(--duration-base) var(--ease-standard),
+          border-color var(--duration-base) var(--ease-standard);
+      }
+
+      .btn--sm {
+        padding: 8px 16px;
+        min-height: 38px;
+        font-size: 12px;
+      }
+      .btn--md {
+        padding: 11px 22px;
+        min-height: 44px;
+        font-size: 13px;
+      }
+      .btn--lg {
+        padding: 14px 28px;
+        min-height: 48px;
+        font-size: 14px;
+      }
+      .btn--block {
+        width: 100%;
+      }
+
+      .btn--primary {
+        background: var(--accent-primary);
+        color: var(--espresso-950);
+      }
+      .btn--primary:hover {
+        background: var(--gold-400);
+      }
+
+      .btn--secondary {
+        background: transparent;
+        color: var(--text-primary);
+        border-color: var(--border-strong);
+      }
+      .btn--secondary:hover {
+        background: var(--surface-page);
+      }
+
+      .btn--dark {
+        background: var(--espresso-950);
+        color: var(--cream-50);
+      }
+      .btn--dark:hover {
+        background: var(--espresso-800);
+      }
+
+      /* ---- Reveal ------------------------------------------------------ */
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px) scale(0.97);
+        transition:
+          opacity 900ms cubic-bezier(0.16, 1, 0.3, 1),
+          transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .reveal.is-revealed {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      /* Frames that also drift: parallax rides in a custom property so the
+         reveal scale and the scroll offset share one transform. */
+      .reveal--zoom {
+        transform: translateY(var(--parallax, 0px)) scale(1.05);
+      }
+      .reveal--zoom.is-revealed {
+        transform: translateY(var(--parallax, 0px)) scale(1);
+      }
+
+      /* ---- Header ------------------------------------------------------ */
+
+      .scroll-progress {
+        position: fixed;
+        inset: 0 auto auto 0;
+        z-index: 61;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--umber-500), var(--gold-400));
+        transition: width 80ms linear;
+      }
+
+      .site-header {
+        position: fixed;
+        inset: 0 0 auto 0;
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 22px 32px;
+        background: transparent;
+        transition: background 220ms ease;
+      }
+      .site-header.is-scrolled {
+        background: rgba(11, 8, 5, 0.82);
+        backdrop-filter: blur(8px);
+      }
+
+      .brand {
+        font-family: var(--font-display);
+        font-size: 22px;
+        letter-spacing: var(--ls-tight);
+        color: var(--cream-50);
+        text-decoration: none;
+      }
+
+      .site-nav {
+        display: flex;
+        align-items: center;
+        gap: 36px;
+        font-size: 12px;
+        letter-spacing: var(--ls-wide);
+        text-transform: uppercase;
+        color: var(--cream-50);
+      }
+      .site-nav a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .header-actions__short {
+        display: none;
+      }
+
+      .nav-toggle {
+        display: none;
+        width: 38px;
+        height: 38px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 0;
+        border: 1px solid var(--border-subtle-dark);
+        background: transparent;
+        cursor: pointer;
+      }
+      .nav-toggle span {
+        display: block;
+        width: 16px;
+        height: 1px;
+        background: var(--cream-50);
+      }
+
+      .mobile-nav {
+        position: fixed;
+        top: 72px;
+        left: 0;
+        right: 0;
+        z-index: 55;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 28px 24px;
+        background: var(--espresso-950);
+        border-bottom: var(--border-w) solid var(--border-subtle-dark);
+      }
+      .mobile-nav a {
+        font-family: var(--font-display);
+        font-size: 20px;
+        color: var(--cream-50);
+        text-decoration: none;
+      }
+
+      /* ---- Hero -------------------------------------------------------- */
+
+      .hero {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        min-height: 640px;
+        padding: 0 24px;
+        text-align: center;
+        overflow: hidden;
+        background: var(--espresso-950);
+      }
+
+      .hero__media {
+        position: absolute;
+        inset: -10% 0 0 0;
+        height: 120%;
+        transform: translateY(var(--parallax, 0px));
+      }
+      .hero__media img,
+      .about__frame img,
+      .gallery__item img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .hero__shade {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(11, 8, 5, 0.55) 0%,
+          rgba(11, 8, 5, 0.68) 40%,
+          rgba(11, 8, 5, 0.92) 100%
+        );
+      }
+      .hero__vignette {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 60% 55% at 50% 42%,
+          rgba(11, 8, 5, 0.6) 0%,
+          rgba(11, 8, 5, 0) 100%
+        );
+      }
+
+      .hero__content {
+        position: relative;
+        z-index: 1;
+        max-width: 700px;
+        animation: fade-up 1.2s var(--ease-out) both;
+      }
+      .hero__eyebrow {
+        color: var(--gold-300);
+        margin-bottom: 24px;
+      }
+      .hero h1 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: clamp(3rem, 9vw, 6.5rem);
+        line-height: var(--lh-tight);
+        letter-spacing: var(--ls-tight);
+        color: var(--cream-50);
+        text-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
+      }
+      .hero__lede {
+        max-width: 460px;
+        margin: 20px auto 0;
+        font-size: 18px;
+        line-height: var(--lh-relaxed);
+        color: var(--text-on-dark-muted);
+      }
+      .hero__actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 24px;
+        margin-top: 36px;
+      }
+      .hero__menu-link {
+        font-size: 13px;
+        letter-spacing: var(--ls-wide);
+        text-transform: uppercase;
+        color: var(--cream-50);
+        text-decoration: underline;
+        text-decoration-color: rgba(244, 237, 224, 0.4);
+        text-underline-offset: 4px;
+      }
+      .hero__cue {
+        position: absolute;
+        bottom: 36px;
+        z-index: 1;
+        margin: 0;
+        font-size: 11px;
+        letter-spacing: var(--ls-wider);
+        text-transform: uppercase;
+        color: var(--text-on-dark-muted);
+      }
+
+      @keyframes fade-up {
+        from {
+          opacity: 0;
+          transform: translateY(22px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ---- About ------------------------------------------------------- */
+
+      .about {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        align-items: center;
+        gap: var(--space-8);
+        max-width: 1220px;
+        margin: 0 auto;
+        padding: var(--space-9) var(--space-7);
+        background: var(--surface-page);
+      }
+      .about__frame {
+        position: relative;
+        aspect-ratio: 4 / 5;
+        overflow: hidden;
+        border-radius: var(--radius-sm);
+        background: linear-gradient(160deg, var(--umber-500), var(--espresso-800));
+      }
+      .about__eyebrow {
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+      }
+      .about__text h2 {
+        margin: 0 0 20px;
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: var(--lh-tight);
+        color: var(--text-primary);
+      }
+      .about__text p:not(.eyebrow) {
+        max-width: 52ch;
+        margin: 0 0 14px;
+        font-size: 15px;
+        line-height: var(--lh-relaxed);
+        color: var(--text-secondary);
+      }
+      .about__text p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* ---- Menu -------------------------------------------------------- */
+
+      .menu {
+        padding: var(--space-9) var(--space-7);
+        background: var(--surface-dark);
+      }
+      .menu__inner {
+        max-width: 1160px;
+        margin: 0 auto;
+      }
+      .menu__head {
+        text-align: center;
+        margin-bottom: var(--space-8);
+      }
+      .menu__eyebrow {
+        color: var(--gold-300);
+        margin-bottom: 16px;
+      }
+      .menu__head h2 {
+        margin: 0 0 12px;
+        font-family: var(--font-display);
+        font-size: clamp(2.1rem, 5vw, 3.2rem);
+        color: var(--cream-50);
+      }
+      .menu__note {
+        margin: 0;
+        font-size: 14px;
+        color: var(--text-on-dark-muted);
+      }
+
+      .menu__columns {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        gap: var(--space-8) var(--space-9);
+      }
+      .menu__group + .menu__group {
+        margin-top: 40px;
+      }
+      .menu__group h3 {
+        margin: 0 0 20px;
+        font-family: var(--font-display);
+        font-style: italic;
+        font-size: 1.4rem;
+        color: var(--gold-300);
+      }
+      .menu__group ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .menu__group li {
+        padding: 14px 0;
+        border-bottom: var(--border-w) dashed var(--border-subtle-dark);
+      }
+      .menu__group li:last-child {
+        border-bottom: none;
+      }
+      .menu__row {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+      }
+      .menu__name {
+        font-family: var(--font-display);
+        font-size: 1.05rem;
+        color: var(--cream-50);
+      }
+      .menu__leader {
+        flex: 1;
+        min-width: 16px;
+        border-bottom: 1px dotted var(--text-on-dark-muted);
+        transform: translateY(-0.3em);
+      }
+      .menu__price {
+        font-size: 15px;
+        color: var(--cream-50);
+      }
+      .menu__item-note {
+        display: block;
+        margin-top: 6px;
+        font-size: 13px;
+        color: var(--text-on-dark-muted);
+      }
+      .menu__footnote {
+        margin: var(--space-8) 0 0;
+        font-size: 13px;
+        text-align: center;
+        color: var(--text-on-dark-muted);
+      }
+      .menu__cta {
+        display: flex;
+        justify-content: center;
+        margin-top: 28px;
+      }
+      /* The secondary button sits on the dark menu panel here. */
+      .menu__cta .btn--secondary {
+        color: var(--cream-50);
+        border-color: var(--border-subtle-dark);
+      }
+      .menu__cta .btn--secondary:hover {
+        background: var(--espresso-800);
+      }
+
+      /* ---- Gallery ----------------------------------------------------- */
+
+      .gallery {
+        padding: var(--space-9) 0;
+        background: var(--surface-page);
+      }
+      .gallery__title {
+        margin: 0 0 var(--space-8);
+        font-family: var(--font-display);
+        font-size: clamp(2.1rem, 5vw, 3.2rem);
+        text-align: center;
+        color: var(--text-primary);
+      }
+      .gallery__rail {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 16px;
+        height: 560px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 var(--space-7);
+      }
+      .gallery__item {
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        margin: 0;
+        overflow: hidden;
+      }
+      .gallery__item:first-child {
+        grid-row: 1 / 3;
+      }
+      .gallery__item figcaption {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        padding: 14px;
+        font-size: 13px;
+        color: var(--cream-50);
+        background: linear-gradient(180deg, transparent, rgba(11, 8, 5, 0.85));
+      }
+      .gallery__item:first-child figcaption {
+        padding: 20px;
+        font-size: 15px;
+      }
+
+      /* ---- Hours ------------------------------------------------------- */
+
+      .hours {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: var(--space-8);
+        max-width: 1160px;
+        margin: 0 auto;
+        padding: var(--space-9) var(--space-7);
+        background: var(--surface-page);
+      }
+      .hours__title {
+        margin: 0 0 24px;
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        color: var(--text-primary);
+      }
+      .hours__list {
+        margin: 0 0 24px;
+        padding: 0;
+        list-style: none;
+        font-variant-numeric: tabular-nums;
+      }
+      .hours__list li {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 12px 0;
+        border-bottom: var(--border-w) dashed var(--border-subtle);
+      }
+      .hours__list li:last-child {
+        border-bottom: none;
+      }
+      .hours__time {
+        color: var(--text-muted);
+      }
+      .hours__note {
+        margin: 0 0 24px;
+        font-size: 14px;
+        color: var(--text-muted);
+      }
+      .hours__address {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-style: normal;
+        color: var(--text-primary);
+      }
+      .hours__phone {
+        color: var(--text-primary);
+        text-decoration: underline;
+        text-decoration-color: var(--border-subtle);
+        text-underline-offset: 3px;
+      }
+      .hours__directions {
+        display: inline-block;
+        margin-top: 10px;
+        font-size: 13px;
+        letter-spacing: var(--ls-wide);
+        text-transform: uppercase;
+        color: var(--text-accent);
+        text-decoration: underline;
+        text-decoration-color: var(--gold-300);
+        text-underline-offset: 3px;
+      }
+      .hours__meta {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin: 28px 0 0;
+        padding: 0;
+        list-style: none;
+        font-size: 14px;
+        color: var(--text-muted);
+      }
+      .hours__map {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 280px;
+        background: var(--espresso-900);
+      }
+      .hours__map span {
+        font-size: 11px;
+        letter-spacing: var(--ls-wider);
+        text-transform: uppercase;
+        color: rgba(244, 237, 224, 0.4);
+      }
+
+      /* ---- Closing ----------------------------------------------------- */
+
+      .closing {
+        padding: var(--space-9) var(--space-7);
+        text-align: center;
+        background: var(--espresso-950);
+      }
+      .closing__title {
+        margin: 0 0 24px;
+        font-family: var(--font-display);
+        font-size: clamp(2.1rem, 5vw, 3.2rem);
+        color: var(--cream-50);
+      }
+      .closing__actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      .closing__note {
+        margin: 24px 0 0;
+        font-size: 14px;
+        color: var(--text-on-dark-muted);
+      }
+      .closing__note a {
+        color: var(--cream-50);
+        text-decoration: underline;
+        text-decoration-color: rgba(244, 237, 224, 0.4);
+        text-underline-offset: 3px;
+      }
+
+      /* ---- Footer ------------------------------------------------------ */
+
+      .site-footer {
+        padding: 56px var(--space-7);
+        background: var(--espresso-950);
+        color: var(--cream-50);
+      }
+      .site-footer__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 32px;
+        padding-bottom: 32px;
+        margin-bottom: 24px;
+        border-bottom: var(--border-w) solid var(--border-subtle-dark);
+      }
+      .site-footer__brand {
+        margin: 0 0 10px;
+        font-family: var(--font-display);
+        font-size: 20px;
+      }
+      .site-footer__muted {
+        margin: 0;
+        font-size: 13px;
+        color: var(--text-on-dark-muted);
+      }
+      .site-footer__grid p {
+        margin: 0 0 6px;
+        font-size: 13px;
+      }
+      .site-footer__grid p:last-child {
+        margin-bottom: 0;
+      }
+      .site-footer__grid a {
+        color: var(--cream-50);
+        text-decoration: none;
+      }
+      .site-footer__legal {
+        margin: 0;
+        font-size: 12px;
+        color: var(--text-on-dark-muted);
+      }
+
+      /* ---- Reservation dialog ------------------------------------------ */
+
+      .reserve {
+        width: min(440px, calc(100vw - 32px));
+        min-width: min(360px, calc(100vw - 32px));
+        padding: 32px;
+        border: none;
+        border-radius: var(--radius-sm);
+        background: var(--surface-raised);
+        color: var(--text-primary);
+        box-shadow: var(--shadow-lg);
+        font-family: var(--font-sans);
+      }
+      .reserve::backdrop {
+        background: var(--surface-overlay);
+      }
+      .reserve__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+      .reserve__head h2 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: var(--text-h3);
+        font-weight: var(--weight-regular);
+        color: var(--text-primary);
+      }
+      .reserve__close {
+        padding: 0 4px;
+        border: none;
+        background: none;
+        font-size: 20px;
+        line-height: 1;
+        color: var(--text-muted);
+        cursor: pointer;
+      }
+      .reserve__body {
+        max-height: 70vh;
+        overflow-y: auto;
+        padding-right: 4px;
+      }
+      .reserve form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .field__label {
+        font-size: var(--text-label);
+        letter-spacing: var(--ls-wide);
+        text-transform: uppercase;
+        color: var(--text-secondary);
+      }
+      .field input,
+      .field select {
+        font-family: var(--font-sans);
+        font-size: var(--text-body);
+        padding: 12px 14px;
+        background: var(--surface-raised);
+        color: var(--text-primary);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
+        outline: none;
+        transition: border-color var(--duration-fast) var(--ease-standard);
+      }
+      .field select {
+        appearance: none;
+      }
+      .field input:focus,
+      .field select:focus {
+        border-color: var(--border-strong);
+      }
+      .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .reserve__confirm {
+        margin: 0 0 20px;
+        font-size: 14px;
+        line-height: var(--lh-relaxed);
+        color: var(--text-secondary);
+      }
+
+      /* ---- Breakpoints -------------------------------------------------- */
+
+      @media (max-width: 759px) {
+        .site-header {
+          padding: 22px 24px;
+        }
+        .site-nav {
+          display: none;
+        }
+        .nav-toggle {
+          display: flex;
+        }
+        .header-actions__full {
+          display: none;
+        }
+        .header-actions__short {
+          display: inline;
+        }
+
+        .about,
+        .hours,
+        .menu,
+        .closing {
+          padding-left: var(--space-5);
+          padding-right: var(--space-5);
+        }
+
+        .gallery__rail {
+          display: flex;
+          height: auto;
+          padding: 0 24px 8px;
+          overflow-x: auto;
+          scroll-snap-type: x mandatory;
+        }
+        .gallery__item {
+          flex: 0 0 82%;
+          aspect-ratio: 4 / 5;
+          scroll-snap-align: start;
+        }
+        .gallery__item:first-child figcaption {
+          padding: 16px;
+          font-size: 13px;
+        }
+        .gallery__item figcaption {
+          padding: 16px;
+        }
+      }
+
+      @media (min-width: 760px) {
+        .mobile-nav {
+          display: none;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        :global(html) {
+          scroll-behavior: auto;
+        }
+        .hero__content {
+          animation: none;
+        }
+        .reveal,
+        .reveal--zoom {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+        .scroll-progress {
+          transition: none;
+        }
+      }
+    </style>
+  </body>
+</html>
